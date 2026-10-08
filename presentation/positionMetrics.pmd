@@ -1,0 +1,271 @@
+{
+  "id": "positionMetrics",
+  "onLoad": "<%
+       pageVariables.criticalJobs = getPositionsCriticalYes.total;
+       pageVariables.nonCriticalJobs = getPositionsCriticalNo.total;
+  %>",
+  "endPoints": [
+    {
+      "name": "getPositions",
+      "httpMethod": "GET",
+      "authType": "sso",
+      "_generationNote": "Gets a collection of Position business objects. By default, this endpoint returns 20 instances. To increase the page size, use the 'limit' query parameter (e.g. ?limit=100).",
+      "_generationNote2": "If there are more than 100 instances, consider using a search endpoint or another way for the user to filter the available selections.",
+      "url": "<% `https://api.us.wcp.workday.com/apps/{{site.applicationId}}/v1/positions` %>",
+      "isCollection": true
+    },
+    {
+      "name": "aiModel",
+      "url": "https://cloud.flowiseai.com/api/v1/prediction/10cabc81-ffb7-456c-bffb-5a30b5861fd3",
+      "authType": "noAuth",
+      "httpMethod": "POST",
+      "deferred": true,
+      "onSend": "<%
+        {
+          'question' : questionWidget.value
+        } 
+      %>"
+    },
+    {
+      "name": "getPositionsWQL",
+      "baseUrlType": "WQL",
+      "url": "<%
+      
+             let queryString = `SELECT positionID, positionTitle, criticalJob, easyToFillRef FROM {{site.appProperties.dataSource}}`;
+             let url = `/data?query={{queryString.pathEncode()}}`;
+             url;
+          
+      %>",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    },
+    {
+      "name": "getPositionsCriticalYes",
+      "baseUrlType": "WQL",
+      "url": "<%
+      
+             let queryString = `SELECT positionID, positionTitle, criticalJob FROM {{site.appProperties.dataSource}} WHERE criticalJob='yes' `;
+             let url = `/data?query={{string:pathEncode(queryString)}}`;
+             url;
+          
+      %>",
+      "authType": "sso",
+      "httpMethod": "GET",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    },
+    {
+      "name": "getPositionsCriticalNo",
+      "baseUrlType": "WQL",
+      "url": "<%
+      
+             let queryString = `SELECT positionID, positionTitle, criticalJob FROM {{site.appProperties.dataSource}} WHERE criticalJob='no' `;
+             let url = `/data?query={{string:pathEncode(queryString)}}`;
+             url;
+          
+      %>",
+      "authType": "sso",
+      "httpMethod": "GET",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    },
+    {
+      "name": "getPositionsByTitle",
+      "baseUrlType": "WQL",
+      "url": "<%
+      
+             let queryString = ` SELECT count() as totalNoPositions, positionTitle,criticalJob FROM {{site.appProperties.dataSource}} GROUP BY positionTitle,criticalJob HAVING count() > 1 ORDER BY count() DESC  `;
+             let url = `/data?query={{string:pathEncode(queryString)}}`;
+             url;
+          
+      %>",
+      "authType": "sso",
+      "httpMethod": "GET",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    },
+    {
+      "name": "getEasyToFillRefTotals",
+      "baseUrlType": "WQL",
+      "url": "<%
+      
+             let queryString = `SELECT count() as total, easyToFillRef FROM {{site.appProperties.dataSource}}`;
+             let url = `/data?query={{queryString.pathEncode()}}`;
+             url;
+          
+      %>",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    },
+    {
+      "name": "getTotalNoPositionsByYear",
+      "baseUrlType": "WQL",
+      "url": "<%
+      
+             let queryString = `SELECT count() as total, year FROM {{site.appProperties.dataSource}} ORDER BY year ASC`;
+             let url = `/data?query={{queryString.pathEncode()}}`;
+             url;
+          
+      %>",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    }
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Current Positions Available for Hire"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "showOutline": true,
+          "type": "percentBarChart2",
+          "categoryDataSet": {
+            "name": "Critical Job (Y/N)",
+            "value": "% Breakdown",
+            "hideInTooltip": false
+          },
+          "data": "<% [1] %>",
+          "dataVariableName": "instance",
+          "measurementDataSets": [
+            {
+              "name": "No",
+              "value": "<% pageVariables.nonCriticalJobs %>"
+            },
+            {
+              "name": "Yes",
+              "value": "<% pageVariables.criticalJobs %>"
+            }
+          ],
+          "categoryAxisOptions": { },
+          "animateOnLoad": true,
+          "colors": "<% ['#B3E5FC','#FFB3B3'] %>"
+        },
+        {
+          "showOutline": true,
+          "type": "clusteredBarChart2",
+          "data": "<% getPositionsByTitle.data %>",
+          "dataVariableName": "instance",
+          "measurementDataSets": [
+            {
+              "name": "Totals",
+              "value": "<% instance.totalNoPositions %>"
+            }
+          ],
+          "categoryDataSet": {
+            "name": "Position Title",
+            "value": "<% instance.positionTitle %>"
+          },
+          "secondaryCategory": {
+            "name": "Critical Job",
+            "value": "<% instance.criticalJob %>"
+          },
+          "categoryAxisOptions": {
+            "axisTitle": "Job Title - Critical (Y/N)"
+          },
+          "measurementAxisOptions": { },
+          "colors": "<% ['#FFB3B3','#B3E5FC'] %>"
+        },
+        {
+          "animateOnLoad": true,
+          "showLabelLines": true,
+          "showOutline": true,
+          "showPercentLabels": true,
+          "type": "donutChart2",
+          "data": "<% getEasyToFillRefTotals.data %>",
+          "dataVariableName": "instance",
+          "sliceColorDataSet": {
+            "name": "Easy to fill",
+            "value": "<% instance.easyToFillRef%>"
+          },
+          "sliceSizeDataSet": {
+            "name": "Easy to fill",
+            "value": "<% instance.total %>"
+          },
+          "colors": "<% ['#FEF08A','#B3E5FC','#FFB3B3'] %>"
+        },
+        {
+          "type": "lineChart2",
+          "data": "<% list:exclude(getTotalNoPositionsByYear.data, 'year', '2000') %>",
+          "categoryDataSet": {
+            "name": "Year",
+            "value": "<% instance.year %>"
+          },
+          "dataVariableName": "instance",
+          "measurementDataSets": [
+            {
+              "name": "Totals",
+              "value": "<% instance.total %>"
+            }
+          ]
+        },
+        {
+          "type": "textArea",
+          "visible": "hidden",
+          "id": "questionWidget",
+          "label": "Ask your question here",
+          "value": "<% getPositions %>"
+        },
+        {
+          "type": "pageActionButton",
+          "label": "Provide a summary analysis",
+          "onClick": "<%
+            let response = aiModel.invoke();
+            responseWidget.setValue(response.text)
+          %>"
+        },
+        {
+          "type": "textArea",
+          "id": "responseWidget",
+          "enabled": "false"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer"
+    }
+  }
+}

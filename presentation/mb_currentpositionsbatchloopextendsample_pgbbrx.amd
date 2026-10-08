@@ -1,0 +1,52 @@
+{
+  "appProperties": [
+    {
+      "key": "dataSource",
+      "value": "mb_currentpositionsbatchloopextendsample_pgbbrx_positions"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "positionManage",
+      "routingPattern": "/",
+      "page": {
+        "id": "positionManage"
+      }
+    },
+    {
+      "id": "postitionView",
+      "routingPattern": "/postitionView",
+      "page": {
+        "id": "postitionView"
+      }
+    },
+    {
+      "id": "positionMetrics",
+      "routingPattern": "/positionMetrics",
+      "page": {
+        "id": "positionMetrics"
+      }
+    },
+    {
+      "id": "positionDelete",
+      "routingPattern": "/positionDelete",
+      "page": {
+        "id": "positionDelete"
+      }
+    },
+    {
+      "id": "aiTest",
+      "routingPattern": "/aiTest",
+      "page": {
+        "id": "aiTest"
+      }
+    }
+  ],
+  "applicationId": "mb_currentpositionsbatchloopextendsample_pgbbrx",
+  "dataProviders": [
+    {
+      "key": "WQL",
+      "value": "https://api.us.wcp.workday.com/wql/v1"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "mb_currentpositionsbatchloopextendsample_pgbbrx",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      },
+      {
+        "scheme": "NoAuth",
+        "id": "noAuth"
+      }
+    ]
+  },
+  "siteId": "mb_currentpositionsbatchloopextendsample_pgbbrx",
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "mb_currentpositionsbatchloopextendsample_pgbbrx"
+}

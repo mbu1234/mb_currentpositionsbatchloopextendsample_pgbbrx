@@ -1,0 +1,50 @@
+{
+  "id": "positionDelete",
+  "endPoints": [
+    {
+      "name": "getPositions",
+      "url": "<% `https://api.us.wcp.workday.com/apps/{{site.applicationId}}/v1/positions` %>",
+      "authType": "sso",
+      "isCollection": true,
+      "deferred": true
+    },
+    {
+      "name": "deletePositions",
+      "url": "<% `https://api.us.wcp.workday.com/orchestrate/v1/apps/{{site.applicationId}}/orchestrations/deletePositionsFromApp/launch` %>",
+      "authType": "sso",
+      "deferred": true
+    }
+  ],
+  "presentation": {
+    "standardEditButtonsHidden": true,
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Remove Positions?"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "pageActionButton",
+          "label": "Yes: Remove them all!",
+          "onClick": "<% deletePositions.invoke();
+                         let noPositionsLeft = getPositions.invoke().total;
+                         statusWidget.value = noPositionsLeft + ' positions left!'
+           %>"
+        },
+        {
+          "type": "text",
+          "id": "statusWidget",
+          "enabled": false,
+          "value": ""
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [ ]
+    }
+  }
+}

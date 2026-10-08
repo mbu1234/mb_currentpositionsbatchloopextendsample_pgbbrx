@@ -1,0 +1,137 @@
+{
+  "id": "postitionView",
+  "_generationNote": "This page lists all instances of a business object. The buttons on the grid facilitate a detail view of the selected instances.",
+  "securityDomains": [ ],
+  "script": "",
+  "endPoints": [
+    {
+      "name": "getPositions",
+      "_generationNote": "Gets a collection of the Position business object. By default, this endpoint will return a maximum of 20 instances.",
+      "_generationNote2": "The 'pagingInfo' on the grid references this endpoint. This allows the grid to fetch new rows of data as the user scrolls automatically.",
+      "_generationNote3": "The 'pagingVariables' variable on this url contains the information required for the endpoint to be re-fetched with the paging offset. The default initial grid page is 50.",
+      "url": "<% `https://api.us.wcp.workday.com/apps/{{site.applicationId}}/v1/positions?limit={{pagingVariables.limit ?: 50}}&offset={{pagingVariables.offset ?: 0}}` %>",
+      "authType": "sso",
+      "httpMethod": "GET",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    }
+  ],
+  "presentation": {
+    "pageType": "view",
+    "title": {
+      "type": "title",
+      "id": "title",
+      "label": "List - Positions"
+    },
+    "body": {
+      "type": "section",
+      "id": "bodySection",
+      "children": [
+        {
+          "type": "grid",
+          "label": "View All",
+          "id": "viewAllGrid",
+          "_generationNote": "The initial load of the page will not invoke the paging logic. Therefore we must select the initial data for the load of the grid.",
+          "rows": "<% getPositions.data  %>",
+          "_generationNote2": "The rowVariableName is used by the cellTemplate tags to reference the fields in a data row.",
+          "rowVariableName": "position",
+          "pagingInfo": {
+            "_generationNote": "To reference an endPoint for the pagingInformation, use the 'endpoints' variable.",
+            "endPoint": "<% endpoints.getPositions %>",
+            "_generationNote2": "The rowCount allows the grid to show the total number of rows to the user.",
+            "rowCount": "<% getPositions.total %>",
+            "_generationNote3": "The data references the same `data` from the grid `rows` attribute.",
+            "data": "<% getPositions.data %>"
+          },
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "positionIdColumn",
+              "label": "Id",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "text",
+                "id": "positionId",
+                "_generationNote": "The `id` field contains the unique Workday instance ID. This value will only be populated for existing instances.",
+                "value": "<% position.positionID %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "effectiveDateColumn",
+              "label": "Effective Date",
+              "cellTemplate": {
+                "type": "date",
+                "id": "effectiveDateID",
+                "value": "<% position.effectiveDate %>",
+                "dateFormat": "yyyy-MM-dd"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "positionTitleColumn",
+              "label": "Position Title",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "text",
+                "id": "positionTitle",
+                "_generationNote": "When 'useForDisplay` is set on the business object field, the Position API automatically provides a descriptor field.",
+                "value": "<% position.positionTitle %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "positionCriticalColumn",
+              "label": "Critical",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "text",
+                "id": "positionCritical",
+                "_generationNote": "When 'useForDisplay` is set on the business object field, the Position API automatically provides a descriptor field.",
+                "value": "<% position.criticalJob %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "orgIDColumn",
+              "label": "Supervisory Org",
+              "cellTemplate": {
+                "type": "text",
+                "id": "orgID",
+                "value": "<% position.supervisoryOrg.split('_').remove('SUPERVISORY').join(' '); %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "diffFillCodeColumn",
+              "sortableAndFilterable": true,
+              "label": "Easy to Fill Ref Code",
+              "cellTemplate": {
+                "type": "text",
+                "id": "easyFillCode",
+                "value": "<% position.easyToFillRef %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "yearColumn",
+              "sortableAndFilterable": true,
+              "label": "Year",
+              "cellTemplate": {
+                "type": "text",
+                "id": "yearCode",
+                "value": "<% position.year %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

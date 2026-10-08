@@ -1,0 +1,7 @@
+{
+  "id": 1,
+  "name": "ManagePositions",
+  "enabledForPageSecurity": false,
+  "enabledForOrchestrationSecurity": false,
+  "label": "Manage:Positions"
+}

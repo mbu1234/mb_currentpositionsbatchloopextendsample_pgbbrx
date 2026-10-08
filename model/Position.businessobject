@@ -1,0 +1,82 @@
+{
+  "id": 1,
+  "name": "Position",
+  "label": "Position",
+  "defaultSecurityDomains": [
+    "ManagePositions"
+  ],
+  "defaultCollection": {
+    "name": "positions",
+    "label": "Positions"
+  },
+  "fields": [
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "positionID",
+      "id": 1
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "positionTitle",
+      "id": 2
+    },
+    {
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "TEXT",
+      "name": "criticalJob",
+      "id": 3,
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "enableSearch": false
+    },
+    {
+      "id": 4,
+      "name": "supervisoryOrg",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 5,
+      "name": "easyToFillRef",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 6,
+      "name": "effectiveDate",
+      "type": "DATE",
+      "isPurgeable": false,
+      "enableIndex": false,
+      "precision": "DAY"
+    },
+    {
+      "id": 7,
+      "name": "year",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    }
+  ]
+}
